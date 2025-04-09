@@ -1,9 +1,12 @@
 import openai
 import json
 import re
+import os
 from typing import Dict
+from dotenv import load_dotenv
 
-openai.api_key = os.environ.get("OPENAI_API_KEY")
+load_dotenv()
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 async def translate_to_english(text: str) -> str:
     """

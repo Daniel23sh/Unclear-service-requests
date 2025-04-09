@@ -1,11 +1,12 @@
 {
   "login": "התחבר",
-  "tutors": "המומחים שלנו",
+  "Pro": "המומחים שלנו",
   "joinAsPro": "הצטרף כמומחה",
   "welcome": "ברוכים הבאים לאתר שלנו!",
   "helpsign" : "?כיצד אוכל לעזור לך",
   "searchbar": "דבר אליי...",
   "startListening": "התחל זיהוי קולי",
-  "listening": "מקשיב..."
-
+  "listening": "מקשיב...",
+  "clarifyRequest" : "לא הצלחנו לזהות את הבעיה. אנא תאר את התקלה בפירוט רב יותר כדי שנוכל להמשיך.",
+  "problemCategoryIdentified": "הבעיה זוהתה כסוג: {{category}}"
 }

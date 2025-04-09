@@ -1,10 +1,13 @@
 {
   "login": "Login",
-  "tutors": "Our Professionals",
+  "Pro": "Our Professionals",
   "joinAsPro": "Join as a Professional",
   "welcome": "Welcome to our site!",
-  "helpsign" : "What can I help with?",
+  "helpsign" : "What Can I Help With?",
   "searchbar": "Ask anything...",
    "startListening": "Start voice input",
-  "listening": "Listening..."
+  "listening": "Listening...",
+  "clarifyRequest": "We couldn't determine the problem. Please describe the issue in more detail to proceed.",
+  "problemCategoryIdentified": "The issue was categorized as: {{category}}"
+
 }

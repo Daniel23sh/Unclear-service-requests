@@ -35,7 +35,7 @@ const LanguageToggle = () => {
         onClick={toggleDropdown}
         className="flex items-center justify-center p-2 border border-gray-300 rounded hover:bg-gray-100 transition-colors"
       >
-        <FontAwesomeIcon icon={faGlobe} className="w-4 h-4 text-gray-700" />
+        <FontAwesomeIcon icon={faGlobe} className="w-4 h-4 text-gray-700 hover:text-purple-600" />
       </button>
       {isOpen && (
         <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded shadow-lg z-50">

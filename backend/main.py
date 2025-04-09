@@ -1,14 +1,11 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import Dict
-import re
-
-# Import the asynchronous ChatGPT analyzer function from the correct file.
-from chatbot_analyzer import identify_problem_and_category_with_chatgpt
+import mysql.connector
 
 app = FastAPI()
 
+# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -17,20 +14,62 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class UserInput(BaseModel):
-    message: str
+# ✅ Correct MySQL connection config
+db_config = {
+    "host": "database-1.c41c0cegyp3p.us-east-1.rds.amazonaws.com",
+    "port": 3306,
+    "user": "admin",  # ⬅️ change this
+    "password": "12345678",  # ⬅️ change this
+    "database": "handyman_service",
+}
 
-@app.post("/analyze_chatgpt")
-async def analyze_input_chatgpt(user_input: UserInput):
-    """
-    This endpoint uses the ChatGPT API to analyze the user message asynchronously.
-    """
+# ✅ Data model for handyman
+class Handyman(BaseModel):
+    first_name: str
+    last_name: str
+    phone: str
+    profession: str
+    city: str
+    email: str
+    password: str
+
+# ✅ Register endpoint using table: proffesionals
+@app.post("/register")
+def register_handyman(data: Handyman):
     try:
-        result = await identify_problem_and_category_with_chatgpt(user_input.message)
-        print (f"ChatGPT analysis result: {result}")
-        return result
-    except Exception as e:
-        return {"error": str(e)}
+        print("📥 Received registration:", data.dict())
 
-# Run the server with:
-# python -m uvicorn main:app --reload --host 127.0.0.1 --port 8000
+        conn = mysql.connector.connect(**db_config)
+        print("✅ Connected to DB")
+        cursor = conn.cursor()
+
+        query = """
+            INSERT INTO professionals (first_name, last_name, phone, specialization, city, email, password)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """
+        values = (
+            data.first_name,
+            data.last_name,
+            data.phone,
+            data.profession,
+            data.city,
+            data.email,
+            data.password
+        )
+
+        print("🧾 Executing SQL with values:", values)
+        cursor.execute(query, values)
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        print("✅ Registered handyman:", values)
+        return {"message": "Handyman registered successfully"}
+
+    except mysql.connector.Error as err:
+        print("❌ MySQL Error:", err)
+        raise HTTPException(status_code=500, detail=f"MySQL error: {err}")
+
+    except Exception as e:
+        print("❌ Server Error:", e)
+        raise HTTPException(status_code=500, detail=f"Server error: {e}")

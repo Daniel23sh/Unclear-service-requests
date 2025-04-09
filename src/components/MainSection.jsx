@@ -8,6 +8,7 @@ import axios from 'axios';
 const MainSection = () => {
   const [inputValue, setInputValue] = useState('');
   const [analysisResult, setAnalysisResult] = useState(null);
+  const [handymen, setHandymen] = useState([]);
   const { t, i18n } = useTranslation();
   const isHebrew = i18n.language === 'he';
 
@@ -21,9 +22,6 @@ const MainSection = () => {
     handleVoiceResult
   );
 
-  // On click:
-  // - If there's no text or we're listening, toggle start/stop of speech-to-text.
-  // - Otherwise, send the input to the backend for analysis.
   const handleClick = async () => {
     console.log('handleClick triggered', { inputValue, listening });
     if (inputValue.trim() === '' || listening) {
@@ -42,10 +40,20 @@ const MainSection = () => {
         });
         console.log('Response received:', res.data);
         const data = res.data;
-        // Set the analysis result to display it below the section.
         setAnalysisResult(data);
-        // Clear the input field after a successful NLP analysis.
-        setInputValue('');
+        setInputValue('');  // Clear the input after sending
+
+        // If clarification is needed, clear any existing handyman suggestions.
+        if (data.clarification_needed) {
+          setHandymen([]);
+        } else {
+          // Otherwise, show a mock list of 3 handymen
+          setHandymen([
+            { id: 1, name: 'David Fixit', specialty: data.problem_category, rating: 4.8 },
+            { id: 2, name: 'Sarah Tools', specialty: data.problem_category, rating: 4.6 },
+            { id: 3, name: 'Mike Repairman', specialty: data.problem_category, rating: 4.9 },
+          ]);
+        }
       } catch (error) {
         console.error('Error analyzing input:', error);
       }
@@ -98,25 +106,36 @@ const MainSection = () => {
         </div>
       </div>
 
+      {/* Display analysis result */}
       {analysisResult && (
         <div className="w-full max-w-2xl bg-white rounded-md shadow-md p-4 sm:p-6 mt-6">
-          <p>
-            <strong>User Input:</strong> {analysisResult.user_input}
-          </p>
-          <p>
-            <strong>{t('identifiedProblem') || 'Identified Problem'}:</strong>{' '}
-            {analysisResult.identified_problem}
-          </p>
-          <p>
-            <strong>{t('problemCategory') || 'Problem Category'}:</strong>{' '}
-            {analysisResult.problem_category}
-          </p>
-          {analysisResult.clarification_needed && (
-            <p className="text-red-500 mt-2">
-              {t('clarifyRequest') ||
-                "We couldn't determine the problem. Please clarify your issue."}
-            </p>
-          )}
+          <h3 className="text-xl font-bold ">Analysis Result</h3>
+          {analysisResult.clarification_needed ? (
+      <p className="text-red-500 mt-2">
+        {t('clarifyRequest')}
+      </p>
+    ) : (
+  <p className="text-green-600 mt-2">
+    {t('problemCategoryIdentified', { category: analysisResult.problem_category })}
+  </p>
+)}
+
+        </div>
+      )}
+
+      {/* Display mock handyman list if available */}
+      {handymen.length > 0 && (
+        <div className="w-full max-w-2xl bg-white rounded-md shadow-md p-4 sm:p-6 mt-6">
+          <h3 className="text-xl font-bold mb-4">Recommended Handymen</h3>
+          <div className="space-y-4">
+            {handymen.map((handyman) => (
+              <div key={handyman.id} className="border p-4 rounded shadow">
+                <h4 className="font-bold text-lg">{handyman.name}</h4>
+                <p>Specialty: {handyman.specialty}</p>
+                <p>Rating: ⭐ {handyman.rating}</p>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
