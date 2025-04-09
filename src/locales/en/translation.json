@@ -2,5 +2,9 @@
   "login": "Login",
   "tutors": "Our Professionals",
   "joinAsPro": "Join as a Professional",
-  "welcome": "Welcome to our site!"
+  "welcome": "Welcome to our site!",
+  "helpsign" : "What can I help with?",
+  "searchbar": "Ask anything...",
+   "startListening": "Start voice input",
+  "listening": "Listening..."
 }
