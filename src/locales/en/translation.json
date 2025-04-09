@@ -3,11 +3,34 @@
   "Pro": "Our Professionals",
   "joinAsPro": "Join as a Professional",
   "welcome": "Welcome to our site!",
-  "helpsign" : "What Can I Help With?",
+  "helpsign": "What Can I Help With?",
   "searchbar": "Ask anything...",
-   "startListening": "Start voice input",
+  "startListening": "Start voice input",
   "listening": "Listening...",
   "clarifyRequest": "We couldn't determine the problem. Please describe the issue in more detail to proceed.",
-  "problemCategoryIdentified": "The issue was categorized as: {{category}}"
-
+  "problemCategoryIdentified": "The issue was categorized as: {{category}}",
+  "switchToHebrew": "עברית",
+  "switchToEnglish": "English",
+  "register": {
+    "title": "Professional Registration",
+    "firstName": "First Name (Hebrew only)",
+    "lastName": "Last Name (Hebrew only)",
+    "phone": "Phone Number (10 digits)",
+    "selectProfession": "Select Profession",
+    "selectCity": "Select City",
+    "email": "Email Address",
+    "password": "Password (min 6 characters)",
+    "registerButton": "Register",
+    "successTitle": "Registration Successful!",
+    "successText": "You have successfully registered as a professional.",
+    "ok": "OK",
+    "errors": {
+      "invalidName": "First and last name must be in Hebrew and up to 10 characters.",
+      "invalidPhone": "Phone number must be exactly 10 digits.",
+      "emptyProfession": "Please select a profession.",
+      "emptyCity": "Please select a city.",
+      "invalidPassword": "Password must be at least 6 characters.",
+      "default": "An error occurred"
+    }
+  }
 }
