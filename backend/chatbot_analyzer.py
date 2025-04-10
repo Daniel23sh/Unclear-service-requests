@@ -23,6 +23,7 @@ async def translate_to_english(text: str) -> str:
     )
     return resp.choices[0].message.content.strip()
 
+
 async def identify_problem_and_category_with_chatgpt(message: str) -> Dict:
     """
     Analyze a handyman service user message using the ChatGPT API.
@@ -45,7 +46,7 @@ Message to analyze (in English): "{message}"
 Output JSON with these keys:
 - user_input: the original user message (in its original language)
 - identified_problem: concise description of the main problem
-- problem_category: one of "plumbing", "electrical", "carpentry", or "unknown"
+- problem_category: one of "plumber", "electrical", "carpentry", or "unknown"
 - clarification_needed: true if problem_category is "unknown", otherwise false
 """
 

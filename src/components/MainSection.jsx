@@ -4,15 +4,15 @@ import { FiSend } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import useSpeechToText from '../hooks/useSpeechToText';
 import axios from 'axios';
+import TeamCards from './ProRec'; // Import the TeamCards component
 
 const MainSection = () => {
   const [inputValue, setInputValue] = useState('');
   const [analysisResult, setAnalysisResult] = useState(null);
-  const [handymen, setHandymen] = useState([]);
   const { t, i18n } = useTranslation();
   const isHebrew = i18n.language === 'he';
 
-  // Append transcript from speech-to-text to the existing inputValue.
+  // Append transcript from speech-to-text to the existing inputValue
   const handleVoiceResult = useCallback((transcript) => {
     setInputValue((prev) => (prev ? `${prev} ${transcript}` : transcript));
   }, []);
@@ -43,17 +43,7 @@ const MainSection = () => {
         setAnalysisResult(data);
         setInputValue('');  // Clear the input after sending
 
-        // If clarification is needed, clear any existing handyman suggestions.
-        if (data.clarification_needed) {
-          setHandymen([]);
-        } else {
-          // Otherwise, show a mock list of 3 handymen
-          setHandymen([
-            { id: 1, name: 'David Fixit', specialty: data.problem_category, rating: 4.8 },
-            { id: 2, name: 'Sarah Tools', specialty: data.problem_category, rating: 4.6 },
-            { id: 3, name: 'Mike Repairman', specialty: data.problem_category, rating: 4.9 },
-          ]);
-        }
+        // Since TeamCards uses its own internal data, we no longer need to set up a separate handyman list.
       } catch (error) {
         console.error('Error analyzing input:', error);
       }
@@ -109,34 +99,31 @@ const MainSection = () => {
       {/* Display analysis result */}
       {analysisResult && (
         <div className="w-full max-w-2xl bg-white rounded-md shadow-md p-4 sm:p-6 mt-6">
-          <h3 className="text-xl font-bold ">Analysis Result</h3>
+          <h3 className="text-xl font-bold">Analysis Result</h3>
           {analysisResult.clarification_needed ? (
-      <p className="text-red-500 mt-2">
-        {t('clarifyRequest')}
-      </p>
-    ) : (
-  <p className="text-green-600 mt-2">
-    {t('problemCategoryIdentified', { category: analysisResult.problem_category })}
-  </p>
-)}
-
+            <p className="text-red-500 mt-2">
+              {t('clarifyRequest')}
+            </p>
+          ) : (
+            <p className="text-green-600 mt-2">
+              {t('problemCategoryIdentified', {
+                category: t(`professions.${analysisResult.problem_category}`)
+              })}
+            </p>
+          )}
         </div>
       )}
 
-      {/* Display mock handyman list if available */}
-      {handymen.length > 0 && (
-        <div className="w-full max-w-2xl bg-white rounded-md shadow-md p-4 sm:p-6 mt-6">
-          <h3 className="text-xl font-bold mb-4">Recommended Handymen</h3>
-          <div className="space-y-4">
-            {handymen.map((handyman) => (
-              <div key={handyman.id} className="border p-4 rounded shadow">
-                <h4 className="font-bold text-lg">{handyman.name}</h4>
-                <p>Specialty: {handyman.specialty}</p>
-                <p>Rating: ⭐ {handyman.rating}</p>
-              </div>
-            ))}
+      {/* If analysis result exists and no clarification is needed, render the TeamCards component */}
+      {analysisResult && !analysisResult.clarification_needed && (
+        <div className="w-full max-w-2xl mt-6">
+          <TeamCards
+            category={t(`professions.${analysisResult.problem_category}`, {
+              lng: "he",
+            })}
+          />
+
           </div>
-        </div>
       )}
     </div>
   );

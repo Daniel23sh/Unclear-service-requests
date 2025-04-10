@@ -13,8 +13,8 @@
   "switchToEnglish": "English",
   "register": {
     "title": "Professional Registration",
-    "firstName": "First Name (Hebrew only)",
-    "lastName": "Last Name (Hebrew only)",
+    "firstName": "First Name (Hebrew)",
+    "lastName": "Last Name (Hebrew)",
     "phone": "Phone Number (10 digits)",
     "selectProfession": "Select Profession",
     "selectCity": "Select City",
@@ -30,7 +30,29 @@
       "emptyProfession": "Please select a profession.",
       "emptyCity": "Please select a city.",
       "invalidPassword": "Password must be at least 6 characters.",
-      "default": "An error occurred"
+      "default": "An error occurred",
+       "invalidEmail": "Please enter a valid email address."
     }
-  }
+  },
+  "professions": {
+    "certifiedElectrician": "Certified Electrician",
+    "plumber": "Plumber",
+    "renovationContractor": "Renovation Contractor",
+    "painter": "Painter",
+    "tileInstaller": "Tile Installer",
+    "carpenter": "Carpenter",
+    "acInstaller": "Air Conditioner Installer",
+    "certifiedExterminator": "Certified Exterminator",
+    "doorInstaller": "Door Installer",
+    "fridgeTech": "Refrigerator Technician",
+    "securityCamInstaller": "Security Camera Installer",
+    "boilerTech": "Boiler Technician",
+    "fenceShadeInstaller": "Fence and Shade Installer",
+    "washingMachineTech": "Washing Machine Technician",
+    "solarPanelInstaller": "Solar Panel Installer",
+    "certifiedLocksmith": "Certified Locksmith",
+    "intercomTech": "Intercom and Access Control Tech",
+    "drywallMechanic": "Drywall and Acoustic Ceiling Mechanic",
+    "smartHomeInstaller": "Smart Home Systems Installer"
+}
 }

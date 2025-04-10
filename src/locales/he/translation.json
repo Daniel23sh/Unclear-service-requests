@@ -13,8 +13,8 @@
   "switchToEnglish": "English",
   "register": {
     "title": "הרשמה למומחים",
-    "firstName": "שם פרטי (בעברית בלבד)",
-    "lastName": "שם משפחה (בעברית בלבד)",
+    "firstName": "שם פרטי (בעברית)",
+    "lastName": "שם משפחה (בעברית)",
     "phone": "מספר טלפון (10 ספרות)",
     "selectProfession": "בחר מקצוע",
     "selectCity": "בחר עיר",
@@ -30,7 +30,30 @@
       "emptyProfession": "אנא בחר מקצוע.",
       "emptyCity": "אנא בחר עיר.",
       "invalidPassword": "הסיסמה חייבת להיות לפחות 6 תווים.",
-      "default": "אירעה שגיאה"
+      "default": "אירעה שגיאה",
+      "invalidEmail": "אנא הכנס כתובת דוא\"ל חוקית."
     }
-  }
+},
+"professions": {
+  "certifiedElectrician": "חשמלאי מוסמך",
+  "plumber": "אינסטלטור",
+  "renovationContractor": "קבלן שיפוצים",
+  "painter": "צבעי",
+  "tileInstaller": "רצף קרמיקה/שיש",
+  "carpenter": "נגר",
+  "acInstaller": "מתקין מזגנים",
+  "certifiedExterminator": "מדביר מוסמך",
+  "doorInstaller": "מתקין דלתות",
+  "fridgeTech": "טכנאי מקררים",
+  "securityCamInstaller": "מתקין מצלמות אבטחה",
+  "boilerTech": "טכנאי דוד שמש",
+  "fenceShadeInstaller": "מתקין גדרות וצלונים",
+  "washingMachineTech": "טכנאי מכונות כביסה",
+  "solarPanelInstaller": "מתקין קולטי שמש",
+  "certifiedLocksmith": "מנעולן מוסמך",
+  "intercomTech": "איש אינטרקום ובקרת כניסה",
+  "drywallMechanic": "איש גבס ותקרות אקוסטיות",
+  "smartHomeInstaller": "מתקין מערכות בית חכם"
 }
+}
+

@@ -30,48 +30,58 @@ const Register = ({ onClose }) => {
   }, []);
 
   const handleRegister = async () => {
-    if (!isValidHebrew(firstName) || !isValidHebrew(lastName)) {
-      setError(t('register.errors.invalidName'));
-      return;
-    }
-    if (!isValidPhone(phone)) {
-      setError(t('register.errors.invalidPhone'));
-      return;
-    }
-    if (!profession) {
-      setError(t('register.errors.emptyProfession'));
-      return;
-    }
-    if (!city) {
-      setError(t('register.errors.emptyCity'));
-      return;
-    }
-    if (password.length < 6) {
-      setError(t('register.errors.invalidPassword'));
-      return;
-    }
-
-    setError("");
-
-    try {
-      const userData = {
-        first_name: firstName,
-        last_name: lastName,
-        phone,
-        profession,
-        city,
-        email,
-        password,
-      };
-
-      const response = await axios.post("http://localhost:8000/register", userData);
-      console.log("✅ Registration successful:", response.data);
-      setSuccess(true);
-    } catch (error) {
-      console.error("❌ Registration error:", error);
-      setError(error.response?.data?.error || t('register.errors.default'));
-    }
-  };
+      if (!isValidHebrew(firstName) || !isValidHebrew(lastName)) {
+        setError(t('register.errors.invalidName'));
+        return;
+      }
+      if (!isValidPhone(phone)) {
+        setError(t('register.errors.invalidPhone'));
+        return;
+      }
+      
+      // Email validation using the provided regex
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        setError(t('register.errors.invalidEmail'));
+        return;
+      }
+      
+      if (!profession) {
+        setError(t('register.errors.emptyProfession'));
+        return;
+      }
+      if (!city) {
+        setError(t('register.errors.emptyCity'));
+        return;
+      }
+      if (password.length < 6) {
+        setError(t('register.errors.invalidPassword'));
+        return;
+      }
+    
+      setError("");
+    
+      try {
+        const userData = {
+          first_name: firstName,
+          last_name: lastName,
+          phone,
+          profession,
+          city,
+          email,
+          password,
+        };
+    
+        const response = await axios.post("http://localhost:8000/register", userData);
+        console.log("✅ Registration successful:", response.data);
+        setSuccess(true);
+      } catch (error) {
+        console.error("❌ Registration error:", error);
+        let errorMsg = error.response?.data?.detail || "An error occurred";
+        errorMsg = errorMsg.replace(/^Server error:\s*\d+:\s*/, ""); // Remove the "Server error: ###:" prefix.
+        setError(errorMsg);
+      }
+    };
 
   const handleOk = () => {
     setSuccess(false);
