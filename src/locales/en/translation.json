@@ -9,8 +9,10 @@
   "listening": "Listening...",
   "clarifyRequest": "We couldn't determine the problem. Please describe the issue in more detail to proceed.",
   "problemCategoryIdentified": "The issue was categorized as: {{category}}",
+  "alljobs" : "All Professions",
   "switchToHebrew": "עברית",
   "switchToEnglish": "English",
+  "homepage" : "Return to HomePage",
   "register": {
     "title": "Professional Registration",
     "firstName": "First Name (Hebrew)",

@@ -46,9 +46,10 @@ Message to analyze (in English): "{message}"
 Output JSON with these keys:
 - user_input: the original user message (in its original language)
 - identified_problem: concise description of the main problem
-- problem_category: one of "plumber", "electrical", "carpentry", or "unknown"
+- problem_category: one of "Certified Electrician","Plumber","Renovation Contractor","Painter","Tile Installer","Carpenter","Air Conditioner Installer","Certified Exterminator","Door Installer","Refrigerator Technician","Security Camera Installer","Boiler Technician","Fence and Shade Installer","Washing Machine Technician","Solar Panel Installer","Certified Locksmith","Intercom and Access Control Tech","Drywall and Acoustic Ceiling Mechanic","Smart Home Systems Installer"
 - clarification_needed: true if problem_category is "unknown", otherwise false
 """
+
 
     try:
         response = await openai.ChatCompletion.acreate(

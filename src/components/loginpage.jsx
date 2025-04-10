@@ -4,8 +4,7 @@ import citiesData from "../data/israeli_cities.json";
 import Select from 'react-select';
 import axios from "axios";
 
-
-const professionOptions = ['Plumber', 'Electrician', 'Carpenter', 'Painter', 'Technician'];
+const professionOptions = ["חשמלאי מוסמך","אינסטלטור","קבלן שיפוצים","צבעי","רצף קרמיקה/שיש","נגר","מתקין מזגנים","מדביר מוסמך","מתקין דלתות","טכנאי מקררים","מתקין מצלמות אבטחה","טכנאי דוד שמש","מתקין גדרות וצלונים","טכנאי מכונות כביסה","מתקין קולטי שמש","מנעולן מוסמך","איש אינטרקום ובקרת כניסה","איש גבס ותקרות אקוסטיות","מתקין מערכות בית חכם"];
 
 const isValidHebrew = (text) => /^[\u0590-\u05FF]{1,10}$/.test(text);
 const isValidPhone = (text) => /^[0-9]{10}$/.test(text);
@@ -479,7 +478,7 @@ useEffect(() => {
 </div>
       
       {/* Submission Button */}
-<button onClick={handleSignUpClick} id="signUp">
+<button onClick={handleRegister} id="signUp">
                 {i18n.language === 'he' ? "הרשם" : "Sign Up"}
               </button>
 {error && <p className="text-red-500 mt-2">{error}</p>}
@@ -503,7 +502,7 @@ useEffect(() => {
             <input  type="email" placeholder="Email" />
             <input type="password" placeholder="Password" />
             <a href="#">Forgot your password?</a>
-            <button onClick={handleLogin}>Sign In </button>
+            <button>Sign In onClick</button>
             {success && (
   <div className="h-full flex items-center justify-center absolute inset-0 bg-white bg-opacity-90">
     <div className="bg-white shadow-lg rounded-lg p-8 flex flex-col items-center">

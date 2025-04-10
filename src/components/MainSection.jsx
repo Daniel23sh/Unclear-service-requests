@@ -4,7 +4,7 @@ import { FiSend } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import useSpeechToText from '../hooks/useSpeechToText';
 import axios from 'axios';
-import TeamCards from './ProRec'; // Import the TeamCards component
+import TeamCards from './ProRec'; // This is your TeamCards component
 
 const MainSection = () => {
   const [inputValue, setInputValue] = useState('');
@@ -12,7 +12,7 @@ const MainSection = () => {
   const { t, i18n } = useTranslation();
   const isHebrew = i18n.language === 'he';
 
-  // Append transcript from speech-to-text to the existing inputValue
+  // Append transcript from speech-to-text to the existing inputValue.
   const handleVoiceResult = useCallback((transcript) => {
     setInputValue((prev) => (prev ? `${prev} ${transcript}` : transcript));
   }, []);
@@ -23,32 +23,30 @@ const MainSection = () => {
   );
 
   const handleClick = async () => {
-    console.log('handleClick triggered', { inputValue, listening });
     if (inputValue.trim() === '' || listening) {
       if (listening) {
         stopListening();
-        console.log('Stopped listening');
       } else {
         startListening();
-        console.log('Started listening');
       }
     } else {
       try {
-        console.log('Sending text to backend:', inputValue);
         const res = await axios.post('http://localhost:8000/analyze_chatgpt', {
           message: inputValue,
         });
-        console.log('Response received:', res.data);
         const data = res.data;
         setAnalysisResult(data);
-        setInputValue('');  // Clear the input after sending
-
-        // Since TeamCards uses its own internal data, we no longer need to set up a separate handyman list.
+        setInputValue('');
       } catch (error) {
         console.error('Error analyzing input:', error);
       }
     }
   };
+
+  // Only convert the problem_category to lowercase if it exists.
+  const translatedCategory = analysisResult && analysisResult.problem_category
+    ? t(`professions.${analysisResult.problem_category.toLowerCase()}`, { lng: "he" })
+    : "";
 
   return (
     <div className="flex flex-col items-center justify-center pt-24 px-4">
@@ -85,10 +83,7 @@ const MainSection = () => {
             }
           >
             {inputValue.trim() === '' || listening ? (
-              <FaMicrophone
-                size={20}
-                className={listening ? 'text-red-500 animate-pulse' : ''}
-              />
+              <FaMicrophone size={20} className={listening ? 'text-red-500 animate-pulse' : ''} />
             ) : (
               <FiSend size={20} />
             )}
@@ -101,29 +96,22 @@ const MainSection = () => {
         <div className="w-full max-w-2xl bg-white rounded-md shadow-md p-4 sm:p-6 mt-6">
           <h3 className="text-xl font-bold">Analysis Result</h3>
           {analysisResult.clarification_needed ? (
-            <p className="text-red-500 mt-2">
-              {t('clarifyRequest')}
-            </p>
+            <p className="text-red-500 mt-2">{t('clarifyRequest')}</p>
           ) : (
             <p className="text-green-600 mt-2">
-              {t('problemCategoryIdentified', {
-                category: t(`professions.${analysisResult.problem_category}`)
-              })}
+              {t('problemCategoryIdentified', { category: translatedCategory })}
             </p>
           )}
         </div>
       )}
 
-      {/* If analysis result exists and no clarification is needed, render the TeamCards component */}
+      {/* Render TeamCards when analysis result exists and no clarification is needed */}
       {analysisResult && !analysisResult.clarification_needed && (
         <div className="w-full max-w-2xl mt-6">
           <TeamCards
-            category={t(`professions.${analysisResult.problem_category}`, {
-              lng: "he",
-            })}
+            category={translatedCategory}
           />
-
-          </div>
+        </div>
       )}
     </div>
   );

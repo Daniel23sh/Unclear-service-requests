@@ -49,43 +49,65 @@ const renderStars = (rating) => {
 
 const TeamCards = ({ category }) => {
   const [teamMembers, setTeamMembers] = useState([]);
-  // visibleCount controls how many cards are displayed initially
   const [visibleCount, setVisibleCount] = useState(3);
   const [selectedMember, setSelectedMember] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   console.log("TeamCards is rendering with category:", category);
 
   useEffect(() => {
-    console.log("TeamCards useEffect triggered, received category:", category);
     if (!category) return;
-
     const fetchTeamMembers = async () => {
       try {
+        setIsLoading(true);
         const res = await axios.get(
           `http://localhost:8000/pros?category=${encodeURIComponent(category)}`
         );
-        console.log("Fetched team members:", res.data);
         const fetchedMembers = Array.isArray(res.data)
           ? res.data
           : res.data.pros || [];
-        // Filter the array to include only professionals with the desired category.
         const filteredMembers = fetchedMembers.filter(
           (member) => member.category === category
         );
-        console.log("Filtered team members:", filteredMembers);
         setTeamMembers(filteredMembers);
-        // Reset visible count if new data comes in.
         setVisibleCount(3);
       } catch (error) {
-        console.error("Error fetching recommended professionals:", error);
+        console.error("Error fetching professionals:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchTeamMembers();
   }, [category]);
 
-  const openDetails = (member) => setSelectedMember(member);
-  const closeDetails = () => setSelectedMember(null);
+  const fetchReviews = async (proId) => {
+    try {
+      setReviewsLoading(true);
+      const res = await axios.get(`http://localhost:8000/reviews/${proId}`);
+      console.log("Fetched reviews for pro", proId, ":", res.data);
+      // Assuming endpoint returns an object: { reviews: [...] }
+      setReviews(res.data.reviews || []);
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+      setReviews([]);
+    } finally {
+      setReviewsLoading(false);
+    }
+  };
+
+  const openDetails = (member) => {
+    // When opening the modal, fetch the reviews for this professional.
+    fetchReviews(member.id);
+    setSelectedMember(member);
+  };
+
+  const closeDetails = () => {
+    setSelectedMember(null);
+    setReviews([]);
+  };
 
   const loadMore = () => {
     setVisibleCount(teamMembers.length);
@@ -94,6 +116,33 @@ const TeamCards = ({ category }) => {
   const collapse = () => {
     setVisibleCount(3);
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <svg
+          className="animate-spin h-10 w-10 text-purple-700"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          ></circle>
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8v8H4z"
+          ></path>
+        </svg>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4" dir="rtl">
@@ -132,7 +181,6 @@ const TeamCards = ({ category }) => {
             </div>
           ))}
         </div>
-        {/* Show "Load More" button if not all professionals are visible */}
         {teamMembers.length > visibleCount && (
           <div className="flex justify-center mt-4">
             <button 
@@ -143,7 +191,6 @@ const TeamCards = ({ category }) => {
             </button>
           </div>
         )}
-        {/* Show "Collapse" button if all pros are visible and there are more than 3 */}
         {teamMembers.length > 3 && visibleCount === teamMembers.length && (
           <div className="flex justify-center mt-4">
             <button 
@@ -194,9 +241,44 @@ const TeamCards = ({ category }) => {
               <h4 className="text-lg font-semibold mb-2 text-gray-800">
                 ביקורות:
               </h4>
-              <p className="text-gray-800 text-sm">
-                פרטי ביקורות יוצגו כאן
-              </p>
+              {reviewsLoading ? (
+                <div className="flex justify-center items-center h-32">
+                  <svg
+                    className="animate-spin h-8 w-8 text-purple-700"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8H4z"
+                    ></path>
+                  </svg>
+                </div>
+              ) : reviews.length > 0 ? (
+                reviews.map((rev) => (
+                  <div key={rev.id} className="border-b border-gray-300 py-2">
+                    <p className="font-bold">{rev.reviewer_name}</p>
+                    <div className="flex items-center">
+                      {/** You can create a helper function here similar to renderStars for the review rating */}
+                      <span className="mr-2">{rev.rating} ⭐</span>
+                    </div>
+                    <p>{rev.review_text}</p>
+                    <p className="text-xs text-gray-500">{rev.created_at}</p>
+                  </div>
+                ))
+              ) : (
+                <p>לא נמצאו ביקורות</p>
+              )}
             </div>
           </div>
         </div>
@@ -206,3 +288,4 @@ const TeamCards = ({ category }) => {
 };
 
 export default TeamCards;
+  

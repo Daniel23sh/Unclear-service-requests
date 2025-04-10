@@ -82,7 +82,6 @@ def login(request: LoginRequest):
         user = cursor.fetchone()
         if not user or user["password"] != request.password:
             raise HTTPException(status_code=400, detail="Invalid email or password.")
-        # Return a simple success message (you could issue a token here)
         return {
             "message": "Login successful",
             "user": {
@@ -97,9 +96,6 @@ def login(request: LoginRequest):
 
 @app.post("/analyze_chatgpt")
 async def analyze_input_chatgpt(user_input: UserInput):
-    """
-    This endpoint uses the ChatGPT API to analyze the user message asynchronously.
-    """
     try:
         result = await identify_problem_and_category_with_chatgpt(user_input.message)
         print(f"ChatGPT analysis result: {result}")
@@ -110,8 +106,8 @@ async def analyze_input_chatgpt(user_input: UserInput):
 @app.get("/pros")
 def get_pros_data():
     """
-    This endpoint retrieves the professionals' full name, specialization as category,
-    number of reviews, and average rating (ordered by highest average rating).
+    Retrieves professionals with their full name, specialization (as category),
+    number of reviews, average rating, image, and price.
     """
     try:
         conn = mysql.connector.connect(**db_config)
@@ -121,10 +117,13 @@ def get_pros_data():
                 CONCAT(p.first_name, ' ', p.last_name) AS name,
                 p.specialization AS category,
                 COUNT(r.id) AS number_of_reviews,
-                AVG(r.rating) AS average_rating, img_person AS image, price
+                AVG(r.rating) AS average_rating,
+                img_person AS image,
+                price,
+                p.id
             FROM professionals p
             LEFT JOIN reviews r ON p.id = r.professional_id
-            GROUP BY p.id, p.first_name, p.last_name, p.specialization
+            GROUP BY p.id, p.first_name, p.last_name, p.specialization, price, img_person
             ORDER BY average_rating DESC;
         """
         cursor.execute(query)
@@ -135,6 +134,32 @@ def get_pros_data():
     finally:
         cursor.close()
         conn.close()
+
+@app.get("/reviews/{pro_id}")
+def get_reviews(pro_id: int):
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor(dictionary=True)
+        query = """
+            SELECT 
+                id,
+                reviewer_name,
+                review_text,
+                rating,
+                created_at
+            FROM reviews
+            WHERE professional_id = %s
+            ORDER BY created_at DESC;
+        """
+        cursor.execute(query, (pro_id,))
+        reviews = cursor.fetchall()
+        return {"reviews": reviews}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        cursor.close()
+        conn.close()
+
 
 # Run the server with:
 # python -m uvicorn main:app --reload --host 127.0.0.1 --port 8000
